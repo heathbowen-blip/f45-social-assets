@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Top Attendees uptown_phoenix</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100vw;height:100vh;object-fit:contain;display:block}</style></head>
+<body><img id="s" alt="">
+<script>
+// Shows the slide only inside its window (America/Phoenix, UTC-7). After that: FALLBACK_URL if set, else a dark screen.
+var START=new Date("2026-11-16T00:00:00-07:00"),END=new Date("2026-11-26T00:00:00-07:00"),FALLBACK_IMG="../current/uptown_phoenix_welcome.png?v=20261116";
+var n=new Date();
+if(n>=START&&n<END){document.getElementById("s").src="../current/uptown_phoenix.png?v=20261116";}
+else{document.getElementById("s").src=FALLBACK_IMG;}
+</script></body></html>
