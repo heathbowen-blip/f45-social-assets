@@ -3,9 +3,8 @@
 <body><img id="s" alt="">
 <script>
 // Shows the slide only inside its window (America/Phoenix, UTC-7). After that: FALLBACK_URL if set, else a dark screen.
-var START=new Date("2026-11-16T00:00:00-07:00"),END=new Date("2026-11-23T00:00:00-07:00"),FALLBACK_URL="";
+var START=new Date("2026-11-16T00:00:00-07:00"),END=new Date("2026-11-23T00:00:00-07:00"),FALLBACK_IMG="../current/chandler_north_welcome.png?v=20261116";
 var n=new Date();
 if(n>=START&&n<END){document.getElementById("s").src="../current/chandler_north.png?v=20261116";}
-else if(FALLBACK_URL){location.replace(FALLBACK_URL);}
-else{document.getElementById("s").style.display="none";}
+else{document.getElementById("s").src=FALLBACK_IMG;}
 </script></body></html>
