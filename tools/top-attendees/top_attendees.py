@@ -35,13 +35,21 @@ html,body{{overflow:hidden;font-family:Montserrat,Arial,sans-serif;color:{CREAM}
 .nm{{font-weight:800;color:#fff}}
 .ct{{margin-left:auto;font-weight:600;color:#C9C3E8}}
 .r1 .rk{{color:{GOLD}}} .r1 .nm{{color:{GOLD}}}
+.trib{{margin-top:12px;font-size:25px}}
+.jc{{width:54px;height:54px;margin-left:12px;flex:none}}
+.trib{{color:{GOLD};font-weight:700;font-style:italic}}
+.mem{{position:absolute;left:292px;top:44px;display:flex;align-items:center;gap:20px;padding:10px 90px 10px 10px;z-index:5}} .mem::before{{content:'';position:absolute;inset:-6px 10px -6px -14px;background:rgba(18,12,51,.62);filter:blur(24px);border-radius:80px;z-index:-1}} .mem img{{width:104px;height:104px;border-radius:50%;object-fit:cover;border:2px solid {GOLD};box-shadow:0 0 0 5px rgba(245,196,81,.18)}}
+.mem div{{font-family:'Montserrat',sans-serif;font-size:17px;line-height:1;color:#fff;font-weight:600;letter-spacing:5px;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.6)}} .mem b{{display:block;margin-top:10px;font-family:'Bebas Neue',Impact,sans-serif;font-size:54px;letter-spacing:4px;color:{GOLD};font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.65)}}
 """
 
-def rows(att, show, label=True):
+STAR = lambda t: f'<svg class="jc" viewBox="0 0 100 100"><polygon points="50,2 61,36 97,36 68,57 79,92 50,71 21,92 32,57 3,36 39,36" fill="#D6001C" stroke="#fff" stroke-width="3"/><text x="50" y="62" text-anchor="middle" font-family="Montserrat,Arial" font-weight="800" font-size="27" fill="#fff">{t}</text></svg>'
+
+def rows(att, show, label=True, star=None):
     out = ""
     for i, a in enumerate(att, 1):
         ct = f'<span class="ct">{a["visits"]}{" classes" if label else ""}</span>' if show else ""
-        out += f'<div class="row r{i}"><span class="rk">{i}</span><span class="nm">{a["name"]}</span>{ct}</div>'
+        sv = STAR(star) if (star and i == 1) else ""
+        out += f'<div class="row r{i}"><span class="rk">{i}</span><span class="nm">{a["name"]}</span>{sv}{ct}</div>'
     return out
 
 PH_CSS = f""".ph{{position:absolute;inset:0;width:100%;height:100%;filter:blur(1.5px) saturate(.95);transform:scale(1.03)}}
@@ -137,6 +145,11 @@ def hero(d, fmt):
 .r1{{border-left-color:{GOLD};background:rgba(245,196,81,.14)}}
 .foot{{position:absolute;background:{RED};display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff}}
 .ph{{position:absolute;object-fit:cover}}"""
+    tribute = d.get('tribute')
+    trib_html = f'<div class="trib">{tribute}</div>' if tribute else ''
+    memblock = ''
+    if d.get('memorial_photo') and fmt == 'billboard':
+        memblock = f'<div class="mem"><img src="{photo_b64(d["memorial_photo"],300,300,.5,.25)}"><div>In loving memory of<b>{d["memorial_name"]}</b></div></div>'
     if fmt == "billboard":
         W, H = 1920, 1080
         css = common + f"""
@@ -151,8 +164,8 @@ def hero(d, fmt):
 .foot{{left:0;right:0;bottom:0;height:100px;font-size:36px}}"""
         bpos = (.55, .45)
         body = f"""<img class="ph" src="{photo_b64(ph,1000,1080,*bpos)}"><div class="shade"></div><img class="logo" src="{b64(LOGO)}">
-<div class="tb"><div class="kick">Community Spotlight</div><div class="hl t">Top {n} Attendees</div><div class="hl s">{d['studio']}</div><div class="per">{d['period']}</div></div>
-<div class="board">{rows(att, sh, label=False)}</div><div class="foot">{d.get('footer','Real consistency. Real results.')}</div>"""
+{memblock}<div class="tb"><div class="kick">Community Spotlight</div><div class="hl t">Top {n} Attendees</div><div class="hl s">{d['studio']}</div><div class="per">{d['period']}</div></div>
+<div class="board">{rows(att, sh, label=False, star=d.get('star'))}</div><div class="foot">{d.get('footer','Real consistency. Real results.')}</div>"""
     elif fmt == "feed":
         W, H = 1080, 1350
         css = common + f"""
@@ -165,22 +178,22 @@ def hero(d, fmt):
 .row{{padding:0 14px}} .rk{{font-size:42px;width:52px;margin-right:10px}} .nm{{font-size:30px;margin-right:8px}} .ct{{font-size:22px}}
 .foot{{left:0;right:0;bottom:0;height:92px;font-size:28px}}"""
         body = f"""<img class="ph" src="{photo_b64(ph,1080,560,.5,.4)}"><div class="shade"></div><img class="logo" src="{b64(LOGO)}">
-<div class="tb"><div class="hl t">Top {n} Attendees</div><div class="hl s">{d['studio']}</div><div class="per">{d['period']}</div></div>
-<div class="board">{rows(att, sh, label=False)}</div><div class="foot">{d.get('footer','Real consistency. Real results.')}</div>"""
+<div class="tb"><div class="hl t">Top {n} Attendees</div><div class="hl s">{d['studio']}</div><div class="per">{d['period']}</div>{trib_html}</div>
+<div class="board">{rows(att, sh, label=False, star=d.get('star'))}</div><div class="foot">{d.get('footer','Real consistency. Real results.')}</div>"""
     else:
         W, H = 1080, 1920
         css = common + f"""
 .ph{{left:0;top:0;width:1080px;height:860px}}
 .shade{{position:absolute;left:0;top:0;width:1080px;height:860px;background:linear-gradient(to bottom,rgba(18,12,51,.75) 0%,rgba(18,12,51,.68) 34%,rgba(18,12,51,0) 48%,rgba(18,12,51,0) 56%,rgba(18,12,51,.9) 84%,{INK} 100%)}}
 .logo{{position:absolute;left:56px;top:236px;height:68px}}
-.tb{{position:absolute;left:0;right:0;top:640px;text-align:center}}
+.tb{{position:absolute;left:0;right:0;top:596px;text-align:center}}
 .hl.t{{font-size:124px}} .hl.s{{font-size:56px;margin-top:6px}} .per{{font-size:25px;font-weight:600;color:#D9D4F2;margin-top:10px}}
 .board{{position:absolute;left:60px;right:60px;top:880px;height:690px;display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat({R},1fr);column-gap:20px;row-gap:7px}}
 .row{{padding:0 14px}} .rk{{font-size:46px;width:54px;margin-right:10px}} .nm{{font-size:32px;margin-right:8px}} .ct{{font-size:24px}}
 .foot{{left:60px;right:60px;top:1592px;height:68px;border-radius:34px;font-size:24px}}"""
         body = f"""<img class="ph" src="{photo_b64(ph,1080,860,.5,.4)}"><div class="shade"></div><img class="logo" src="{b64(LOGO)}">
-<div class="tb"><div class="hl t">Top {n} Attendees</div><div class="hl s">{d['studio']}</div><div class="per">{d['period']}</div></div>
-<div class="board">{rows(att, sh, label=False)}</div><div class="foot">{d.get('footer','Real consistency. Real results.')}</div>"""
+<div class="tb"><div class="hl t">Top {n} Attendees</div><div class="hl s">{d['studio']}</div><div class="per">{d['period']}</div>{trib_html}</div>
+<div class="board">{rows(att, sh, label=False, star=d.get('star'))}</div><div class="foot">{d.get('footer','Real consistency. Real results.')}</div>"""
     html = f'<html><head><meta charset="utf-8"><style>{BASE}html,body,.wrap{{width:{W}px;height:{H}px}}.wrap{{background:{INK}}}{css}</style></head><body><div class="wrap"><div class="grid"></div>{body}</div></body></html>'
     return html, W, H
 
