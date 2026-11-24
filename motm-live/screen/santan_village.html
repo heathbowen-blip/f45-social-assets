@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MOTM santan_village</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100vw;height:100vh;object-fit:contain;display:block}</style></head>
+<body><img id="s" alt="">
+<script>
+// Since Nov 24, 2026 the slide lives in Google Drive (My Drive > "Lobby Live Slides" > motm_santan_village.png), link-viewable, overwritten in place
+// each month (same file ID, updates show within a few minutes). No GitHub push needed. The GitHub copy is a fallback only.
+var ID="18Un6LFPgMdHtE5D-6ZfgrlE3BYLyWUo5", bust=Math.floor(Date.now()/600000);
+var srcs=["https://lh3.googleusercontent.com/d/"+ID+"=w1920?t="+bust,
+          "https://drive.google.com/thumbnail?id="+ID+"&sz=w1920&t="+bust,
+          "https://raw.githubusercontent.com/heathbowen-blip/f45-social-assets/main/motm-live/current/santan_village.png"];
+var img=document.getElementById("s"), tries=0;
+img.onerror=function(){tries++; if(tries<srcs.length) img.src=srcs[tries];};
+img.src=srcs[0];
+</script></body></html>
