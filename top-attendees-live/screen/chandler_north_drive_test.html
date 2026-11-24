@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Top Attendees chandler_north</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100vw;height:100vh;object-fit:contain;display:block}</style></head>
+<body><img id="s" alt="">
+<script>
+// Slides live in Google Drive (folder "Lobby Live Slides"), overwritten monthly in place on G: by the scheduled task. Same file ID every month.
+// Window: the 16th through the 25th of each month, studio local time. Outside it: the welcome slide.
+var TZ="America/Phoenix", SLIDE="1gypoFQm_qLgbNxQLmY_MlvNEW7p02RoQ", WELCOME="1m1e6SLkEJjvU15_FJWoTuLEjGPVZCllI";
+var GH_SLIDE="../current/chandler_north.png", GH_WELCOME="../current/chandler_north_welcome.png";
+var day=+new Intl.DateTimeFormat("en-US",{timeZone:TZ,day:"numeric"}).format(new Date());
+var live=day>=16&&day<=25, id=live?SLIDE:WELCOME, bust=Math.floor(Date.now()/600000);
+var img=document.getElementById("s"), tries=0;
+var srcs=["https://drive.google.com/thumbnail?id="+id+"&sz=w1920&t="+bust,
+          "https://lh3.googleusercontent.com/d/"+id+"=w1920?t="+bust,
+          (live?GH_SLIDE:GH_WELCOME)];
+img.onerror=function(){tries++; if(tries<srcs.length) img.src=srcs[tries];};
+img.src=srcs[0];
+</script></body></html>
