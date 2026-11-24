@@ -2,9 +2,16 @@
 <style>html,body{margin:0;height:100%;background:#000;overflow:hidden}img{width:100vw;height:100vh;object-fit:contain;display:block}</style></head>
 <body><img id="s" alt="">
 <script>
-// Shows the slide only inside its window (America/Phoenix, UTC-7). After that: FALLBACK_URL if set, else a dark screen.
-var START=new Date("2026-11-16T00:00:00-07:00"),END=new Date("2026-11-26T00:00:00-07:00"),FALLBACK_IMG="../current/uptown_denver_welcome.png?v=20261116";
-var n=new Date();
-if(n>=START&&n<END){document.getElementById("s").src="../current/uptown_denver.png?v=20261116";}
-else{document.getElementById("s").src=FALLBACK_IMG;}
+// Since Nov 24, 2026 the slides live in Google Drive (My Drive > "Lobby Live Slides"), link-viewable, overwritten in place on G: by the
+// monthly scheduled task (same file ID every month; updates show within a few minutes). No GitHub push needed each month.
+// Window: the 16th through the 25th of each month in the studio's time zone; outside it, the welcome slide. GitHub copies are a fallback only.
+var TZ="America/Denver", SLIDE="1HzYg9v_RxJTYUz4Wda9KZ6y9zAZRGoFt", WELCOME="1io-7yIjDiJnM5DjpKCiLCbFKGa2wyNGd";
+var day=+new Intl.DateTimeFormat("en-US",{timeZone:TZ,day:"numeric"}).format(new Date());
+var live=day>=16&&day<=25, id=live?SLIDE:WELCOME, bust=Math.floor(Date.now()/600000);
+var srcs=["https://lh3.googleusercontent.com/d/"+id+"=w1920?t="+bust,
+          "https://drive.google.com/thumbnail?id="+id+"&sz=w1920&t="+bust,
+          live?"../current/uptown_denver.png":"../current/uptown_denver_welcome.png"];
+var img=document.getElementById("s"), tries=0;
+img.onerror=function(){tries++; if(tries<srcs.length) img.src=srcs[tries];};
+img.src=srcs[0];
 </script></body></html>
